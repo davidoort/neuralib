@@ -1,0 +1,31 @@
+name: nnlib
+channels:
+  - conda-forge
+dependencies:
+  - bzip2=1.0.8=h3422bc3_4
+  - ca-certificates=2021.10.8=h4653dfc_0
+  - libblas=3.9.0=13_osxarm64_openblas
+  - libcblas=3.9.0=13_osxarm64_openblas
+  - libcxx=13.0.1=h6a5c8ee_0
+  - libffi=3.4.2=h3422bc3_5
+  - libgfortran=5.0.0.dev0=11_0_1_hf114ba7_23
+  - libgfortran5=11.0.1.dev0=hf114ba7_23
+  - liblapack=3.9.0=13_osxarm64_openblas
+  - libopenblas=0.3.18=openmp_h5dd58f0_0
+  - libzlib=1.2.11=h90dfc92_1014
+  - llvm-openmp=13.0.1=h455960f_1
+  - ncurses=6.3=hc470f4d_0
+  - numpy=1.22.3=py310h2e04ed8_0
+  - openssl=3.0.2=h90dfc92_1
+  - pip=22.0.4=pyhd8ed1ab_0
+  - python=3.10.4=h14b404e_0_cpython
+  - python_abi=3.10=2_cp310
+  - readline=8.1=hedafd6a_0
+  - setuptools=61.3.0=py310hbe9552e_0
+  - sqlite=3.37.1=h7e3ccbd_0
+  - tk=8.6.12=he1e0b03_0
+  - tzdata=2022a=h191b570_0
+  - wheel=0.37.1=pyhd8ed1ab_0
+  - xz=5.2.5=h642e427_1
+  - zlib=1.2.11=h90dfc92_1014
+prefix: /opt/homebrew/Caskroom/miniforge/base/envs/nnlib
