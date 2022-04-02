@@ -1,5 +1,5 @@
 import numpy as np
-from nnlib.layers.layer import ComputationalLayer
+from nnlib.layers.layers import ComputationalLayer
 
 class Sigmoid(ComputationalLayer):
     def __init__(self):

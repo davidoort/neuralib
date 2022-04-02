@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from nnlib import Model
 from nnlib.layers import FullyConnected, Sigmoid, MSE
+from nnlib.optimizers import SGD
 
 def plot_simple(model):
     X = np.array([[0,0], [0,1], [1,0], [1,1]])
@@ -38,21 +39,27 @@ def plot_grid(model):
     plt.ylabel('x2')
     plt.show()
 
+
 if __name__ == '__main__':
-
-
     model = Model()
     model.add(FullyConnected(input_size=2, output_size=3))
     model.add(Sigmoid())
     model.add(FullyConnected(input_size=3, output_size=1))
     model.add(MSE())
 
-    # model.compile(SGD(lr=1))
+    # Training
 
-    # model.train(X, y, batch_size=n, num_epochs=180)
-    # y_pred = model.predict(X)
+    # Fix the random seed
+    np.random.seed(0)
 
-    # acc = classification_accuracy(y, y_pred)
+    # Generate training data
+    X = np.array([[0,0], [0,1], [1,0], [1,1]])
+    y = np.array([ [0],   [1],   [1],   [0]])
+
+    # model.train(X, y, batch_size=4, num_epochs=10000, optimizer=SGD(lr=0.1))
+    y_pred = model.predict(X)
+
+    print("Training loss: ", MSE.mse(y_pred, y)[1])
 
     # Plotting
     plot_simple(model)

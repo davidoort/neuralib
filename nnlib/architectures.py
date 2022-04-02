@@ -2,6 +2,7 @@ from xmlrpc.client import Boolean
 import numpy as np
 from nnlib.layers import ComputationalLayer, Loss
 from abc import ABC,abstractmethod
+from nnlib.optimizers import Optimizer, SGD
 class Architecture(ABC):
     def __init__(self) -> None:
         pass
@@ -36,7 +37,7 @@ class Model(Architecture):
     def add(self, layer: ComputationalLayer) -> None:
         self.layers.append(layer)
   
-    def train(self):
+    def train(self, X, y, epochs: int = 20, batch_size: int = 2, optimizer: Optimizer = SGD(lr=0.1)):
         # TODO: Implement training
         self.training_loss.append()
     

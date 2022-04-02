@@ -1,4 +1,3 @@
-from .layer import *
-from .fully_connected import *
+from .layers import *
 from .losses import *
 from .activations import *
