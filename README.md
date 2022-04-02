@@ -1,4 +1,4 @@
-To update your conda environment so that nnlib dependencies are met, run:
+To update your conda environment so that neuralib dependencies are met, run:
 `conda env update --file environment.yml --prune
 `
 

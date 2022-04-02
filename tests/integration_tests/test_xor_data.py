@@ -2,10 +2,10 @@ from unittest import TestCase
 
 import numpy as np
 
-from nnlib import Model
-from nnlib.layers import FullyConnected
-from nnlib.layers.activations import Sigmoid
-from nnlib.layers.losses import MSE
+from neuralib import Model
+from neuralib.layers import FullyConnected
+from neuralib.layers.activations import Sigmoid
+from neuralib.layers.losses import MSE
 from tests.utils import xor_data
 
 

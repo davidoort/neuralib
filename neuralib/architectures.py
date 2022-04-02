@@ -1,8 +1,8 @@
 from xmlrpc.client import Boolean
 import numpy as np
-from nnlib.layers import ComputationalLayer, Loss
+from neuralib.layers import ComputationalLayer, Loss
 from abc import ABC,abstractmethod
-from nnlib.optimizers import Optimizer, SGD
+from neuralib.optimizers import Optimizer, SGD
 class Architecture(ABC):
     def __init__(self) -> None:
         pass

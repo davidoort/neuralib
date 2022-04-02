@@ -7,7 +7,7 @@ with open('README.md') as f:
     long_description = f.read()
 
 setup(
-    name='nnlib',
+    name='neuralib',
     version='0.0.1',
     author='David Alonso',
     description=description,

@@ -1,8 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from nnlib import Model
-from nnlib.layers import FullyConnected, Sigmoid, MSE
-from nnlib.optimizers import SGD
+from neuralib import Model
+from neuralib.layers import FullyConnected, Sigmoid, MSE
+from neuralib.optimizers import SGD
 
 def plot_simple(model):
     X = np.array([[0,0], [0,1], [1,0], [1,1]])

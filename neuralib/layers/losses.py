@@ -1,5 +1,5 @@
 import numpy as np
-from nnlib.layers.layers import ComputationalLayer
+from neuralib.layers.layers import ComputationalLayer
 
 class Loss(ComputationalLayer):
     def __init__(self) -> None:

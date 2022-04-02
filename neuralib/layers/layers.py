@@ -1,7 +1,7 @@
 import numpy as np
-from nnlib.utils import initialize_weights
+from neuralib.utils import initialize_weights
 from abc import ABC,abstractmethod
-from nnlib.optimizers import Optimizer
+from neuralib.optimizers import Optimizer
 
 class ComputationalLayer(ABC):
     '''
