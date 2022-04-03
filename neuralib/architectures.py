@@ -11,12 +11,15 @@ class Architecture(ABC):
 
     @abstractmethod
     def train(self):
-        pass
+        assert(self.validate()), "Model is not valid"
+
 
     def predict(self, input):
         '''
         When predicting, we do not want to do a loss pass.
         '''
+        assert(self.validate()), "Model is not valid"
+
         return self._forward(input)[0]
 
     @abstractmethod
@@ -29,9 +32,15 @@ class Architecture(ABC):
 
     def validate(self) -> Boolean:
         '''
-        # TODO: Use this to validate that there is only one loss layer at the end, etc
+        Validate the architecture.
         '''
-        pass
+        loss_layers = [layer for layer in self.layers[:-1] if isinstance(layer, Loss)]
+
+        # Check that there is only one loss layer in self.layers and that it is at the end of the self.layers list
+        if isinstance(self.layers[-1], Loss) and not loss_layers:
+            return True
+        return False
+
 
 class Model(Architecture):
     '''
@@ -49,6 +58,7 @@ class Model(Architecture):
         self.layers.append(layer)
   
     def train(self, X, y, batch_size: int, epochs: int, optimizer: Optimizer = SGD(lr=0.1)):
+        super().train()
         for _ in range(epochs):
             for i in range(0, X.shape[0], batch_size):
                 # Do a forward pass using the current batch
