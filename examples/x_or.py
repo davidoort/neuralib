@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from neuralib import Model
-from neuralib.layers import FullyConnected, Sigmoid, MSE
+from neuralib.layers import Linear, Sigmoid, MSE
 from neuralib.optimizers import SGD
 
 def plot_simple(model):
@@ -42,9 +42,9 @@ def plot_grid(model):
 
 if __name__ == '__main__':
     model = Model()
-    model.add(FullyConnected(input_size=2, output_size=3))
+    model.add(Linear(input_size=2, output_size=3))
     model.add(Sigmoid())
-    model.add(FullyConnected(input_size=3, output_size=1))
+    model.add(Linear(input_size=3, output_size=1))
     model.add(MSE())
 
     # Training
