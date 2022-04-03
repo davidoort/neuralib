@@ -34,6 +34,19 @@ class UtilsTest(TestCase):
             expected_grad_X
         )
 
+        def add_1(X_):
+            return X_ + 1
+        
+        expected_grad_X = np.array([
+            [1, 1, 1, 1, 1],
+            [1, 1, 1, 1, 1],
+            [1, 1, 1, 1, 1]], dtype=float)
+        
+        assert_array_almost_equal(
+            numerical_grad(add_1, X),
+            expected_grad_X
+        )
+
     def test_numerical_grad_scalar(self):
 
         def times_5(x_):

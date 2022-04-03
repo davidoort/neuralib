@@ -10,12 +10,12 @@ class ComputationalLayer(ABC):
     The backward method is used to compute the gradient of the layer inputs with respect to the layer outputs.
     '''
     def __init__(self) -> None:
-        self.input_cache = None
+        self._input_cache = None
         pass
 
     @abstractmethod
     def forward(self, inputs: np.array) -> np.array:
-        self.input_cache = inputs
+        self._input_cache = inputs
         # TODO: add docstring? 
         pass
     
@@ -60,12 +60,23 @@ class Linear(GradLayer):
         return inputs @ self.weights + self.biases
 
     def backward(self, gradients_top) -> np.array:
+        """_summary_
+
+        Args:
+            gradients_top (_type_): _description_
+
+        Returns:
+            np.array: _description_
+
+        It's important to distingush 4 types of gradients:
+        - d_loss_d_layer_outputs            (gradients_top):    Gradients of the loss with respect to the layer outputs.
+        - d_loss_d_layer_inputs             (gradients_prop):   Gradients of the loss with respect to the layer inputs. This is what is returned and propagated to the previous layer.
+        - d_loss_d_layer_weights            (self.dweights):    Gradients of the loss with respect to the layer weights. What is needed to update the weights.
+        - d_loss_d_layer_biases             (self.dbiases):     Gradients of the loss with respect to the layer biases. What is needed to update the biases.
+        """
+
+
         self.dweights  = []
         self.dbiases = []
         return []
     
-
-# Can also be called linear or feed-forward layer
-# def dense(inputs, weights):
-#     """A simple dense layer."""
-#     return np.matmul(inputs, weights)
