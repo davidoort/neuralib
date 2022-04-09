@@ -1,8 +1,10 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from neuralib import Model
-from neuralib.layers import FullyConnected, Sigmoid, MSE
+from neuralib.layers import Linear, Sigmoid, MSE
 from neuralib.optimizers import SGD
+
+from neuralib.utils import xor_data
 
 def plot_simple(model):
     X = np.array([[0,0], [0,1], [1,0], [1,1]])
@@ -41,11 +43,15 @@ def plot_grid(model):
 
 
 if __name__ == '__main__':
-    model = Model()
-    model.add(FullyConnected(input_size=2, output_size=3))
-    model.add(Sigmoid())
-    model.add(FullyConnected(input_size=3, output_size=1))
-    model.add(MSE())
+    # model = Model([Linear(input_size=2, output_size=3), Sigmoid(), Linear(input_size=3, output_size=1), MSE()])
+
+    batch_dim = 50   # number of examples (data points)
+    input_dim = 2    # number of features (dimensionality of the data)
+    hidden_dim = 4   # number of neurons in the hidden layer
+    target_dim = 1    # label dimensionality 
+
+    # X, y = xor_data(num_examples=batch_dim)
+    model = Model([Linear(input_size=input_dim, output_size=hidden_dim), Sigmoid(), Linear(input_size=hidden_dim, output_size=target_dim), MSE()])
 
     # Training
 
@@ -56,10 +62,10 @@ if __name__ == '__main__':
     X = np.array([[0,0], [0,1], [1,0], [1,1]])
     y = np.array([ [0],   [1],   [1],   [0]])
 
-    # model.train(X, y, batch_size=4, num_epochs=10000, optimizer=SGD(lr=0.1))
-    y_pred = model.predict(X)
+    model.train(X, y, batch_size=4, epochs=10000, optimizer=SGD(lr=0.1))
+    y_pred, loss = model.predict(X, y)
 
-    print("Training loss: ", MSE.mse(y_pred, y)[1])
+    print("Training loss: ", loss)
 
     # Plotting
     plot_simple(model)

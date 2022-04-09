@@ -1,47 +1,40 @@
 import numpy as np
 from neuralib.layers.layers import ComputationalLayer
-
+from typing import Union
 class Loss(ComputationalLayer):
     def __init__(self) -> None:
         super().__init__()
-        self.targets = None
+        self._pred_cache = None
+        self._targets_cache = None
 
-    def add_targets(self, targets):
-        self.targets = targets
+    def forward(self, y_pred, y_true):
+        assert (y_pred.shape == y_true.shape), "y_pred and targets must have same shape"
+        self._pred_cache = y_pred
+        self._targets_cache = y_true
 
-    def forward(self, y_pred):
-        assert (self.targets is not None), "Targets not set, cannot compute loss"
-        assert (y_pred.shape == self.targets.shape), "y_pred and targets must have same shape"
+    
+    def backward(self, y_pred, y_true):
+        assert (y_pred.shape == y_true.shape), "y_pred and targets must have same shape"
+
 
 # TODO: Write docs about expected input and output shapes
 class MSE(Loss):
     def __init__(self) -> None:
         super().__init__()
     
-    # This is a static method where you pass the class
-    @classmethod
-    def from_targets(cls, targets):
-        # Calls the constructor of the class
-        mse = cls()
-        mse.add_targets(targets)
-        return mse
+    def forward(self, y_pred, y_true) -> Union[np.array, float]:
+        super().forward(y_pred, y_true)
 
-    # TODO: now that this method (mse, or loss) exists, forward and __call__ can be in the abstract class?  
-    # Static method allows you to call the method without instantiating an instance of the class without passing the instance as an argument
-    @staticmethod
-    def mse(y_pred, y):
-        residual = y_pred - y
-        error = np.sum(residual**2)/(2*np.size(y_pred))
-        return residual, error
+        residual = y_pred - y_true
+        error = np.sum(residual**2)/(2*y_pred.shape[0])
+        assert(error >= 0), "Error must be non-negative"
 
-    # This function is so that you can call an instance of mse like instance(y_pred, y_true)
-    def __call__(self, y_pred, y_true):
-        return self.mse(y_pred, y_true)
-    
-    def forward(self, y_pred):
-        super().forward(y_pred)
-        return self.mse(y_pred, self.targets)   
+        return residual, error  
 
-    def backward(self, y_pred):
-        return (y_pred - self.targets)/np.size(y_pred)
+    def backward(self) -> np.array:
+        assert (self._pred_cache is not None and self._targets_cache is not None), "Forward pass required before backward pass"
+        super().backward(self._pred_cache, self._targets_cache)
+        d_mse_d_y_pred = (self._pred_cache - self._targets_cache) / self._pred_cache.shape[0]
+        # clear_cache()
+        return d_mse_d_y_pred
 
