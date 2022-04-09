@@ -48,9 +48,10 @@ class Model(Architecture):
     training_loss: List[float]
     layers: List[ComputationalLayer]
 
-    def __init__(self):
+    def __init__(self, layers: List[ComputationalLayer] = []) -> None:
+        super().__init__()
         self.training_loss = []
-        self.layers = []
+        self.layers = layers
         # self.output = None
 
     def add(self, layer: ComputationalLayer) -> None:

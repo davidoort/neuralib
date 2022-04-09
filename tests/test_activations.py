@@ -17,11 +17,9 @@ class SigmoidTest(TestCase):
         self.layer = Sigmoid()
 
     # def test_forward_with_ground_truths(self):
-    #     loss = self.layer.forward(self.X, self.y)
+    #     out = self.layer.forward(self.X)
 
-    #     self.assertAlmostEqual(loss, self.expected_loss, places=6)
-    #     assert_array_almost_equal(self.layer._probs_cache, self.expected_probs)
-    #     assert_array_equal(self.layer._y_cache, self.y)
+    #     self.assertAlmostEqual(loss, self.expected_out, places=6)
 
     def test_backward(self):
         self.layer.forward(self.X)

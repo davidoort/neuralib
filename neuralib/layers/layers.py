@@ -24,7 +24,7 @@ class ComputationalLayer(ABC):
         """Backward pass of the layer.
 
         Args:
-            gradients_top (n_model_outputs x n_layer_outputs x n_samples): Gradients of the top layer outputs (loss) with respect to the layer outputs.
+            gradients_top (n_model_outputs x n_layer_outputs): Gradients of the top layer outputs (loss) with respect to the layer outputs.
         
         Inputs could explicitly be passed to the backward method, but it is not required, 
         if the forward method has been called before and they are stored in a cache.
@@ -46,10 +46,6 @@ class GradLayer(ComputationalLayer):
         self.weights += optimizer.step(self.d_weights)
         self.biases += optimizer.step(self.d_biases)
 
-    # def zero_grad(self) -> None:
-    #     self.d_weights = np.zeros(self.weights.shape)
-    #     self.d_biases = np.zeros(self.biases.shape)
-
 
 class Linear(GradLayer):
     def __init__(self, input_size: int, output_size: int) -> None:
@@ -61,13 +57,13 @@ class Linear(GradLayer):
         return inputs @ self.weights + self.biases
 
     def backward(self, gradients_top) -> np.array:
-        """_summary_
+        """This is the backward pass of the layer. It calculates the gradient of the top of the computational graph (e.g. loss) with respect to the layer inputs, weights and biases.
 
         Args:
             gradients_top (np.array): n_sample x n_outputs
 
         Returns:
-            np.array: _description_
+            np.array: the gradient of the top of the computational graph with respect to the layer inputs, which is passed to the previous layer.
 
         It's important to distingush 4 types of gradients:
         - d_loss_d_layer_outputs            (gradients_top):    Gradients of the loss with respect to the layer outputs.
@@ -75,7 +71,7 @@ class Linear(GradLayer):
         - d_loss_d_layer_weights            (self.d_weights):    Gradients of the loss with respect to the layer weights. What is needed to update the weights.
         - d_loss_d_layer_biases             (self.d_biases):     Gradients of the loss with respect to the layer biases. What is needed to update the biases.
         """
-
+        super().backward(gradients_top)
 
         self.d_weights = self._input_cache.T @ gradients_top  # Shape of d_weights is the same as the shape of weights so n_inputs x n_outputs 
         self.d_biases = np.ones(shape=[1, gradients_top.shape[0]]) @ gradients_top # Shape of biases is 1 x n_outputs

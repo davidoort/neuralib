@@ -46,6 +46,8 @@ if __name__ == '__main__':
     model.add(Sigmoid())
     model.add(Linear(input_size=3, output_size=1))
     model.add(MSE())
+    # or in one line
+    # model = Model([Linear(input_size=2, output_size=3), Sigmoid(), Linear(input_size=3, output_size=1), MSE()])
 
     # Training
 
@@ -56,7 +58,7 @@ if __name__ == '__main__':
     X = np.array([[0,0], [0,1], [1,0], [1,1]])
     y = np.array([ [0],   [1],   [1],   [0]])
 
-    # model.train(X, y, batch_size=4, num_epochs=10000, optimizer=SGD(lr=0.1))
+    model.train(X, y, batch_size=4, num_epochs=10000, optimizer=SGD(lr=0.1))
     y_pred = model.predict(X)
 
     print("Training loss: ", MSE.mse(y_pred, y)[1])
