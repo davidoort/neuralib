@@ -34,8 +34,6 @@ class Architecture(ABC):
         '''
         Validate the architecture.
         '''
-        print("Validating architecture...")
-        print(self.layers)
         loss_layers = [layer for layer in self.layers[:-1] if isinstance(layer, Loss)]
         # Check that there is only one loss layer in self.layers and that it is at the end of the self.layers list
         if isinstance(self.layers[-1], Loss) and not loss_layers:

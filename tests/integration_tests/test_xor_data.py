@@ -17,7 +17,7 @@ class XorDataTest(TestCase):
         self.batch_dim = 50   # number of examples (data points)
         self.input_dim = 2    # number of features (dimensionality of the data)
         self.hidden_dim = 50   # number of neurons in the hidden layer
-        self.target_dim = 2    # label dimensionality 
+        self.target_dim = 1    # label dimensionality 
 
         np.random.seed(0)
         self.X, self.y = xor_data(num_examples=self.batch_dim)
@@ -36,17 +36,20 @@ class XorDataTest(TestCase):
         self.assertIsNotNone(y_pred)
         self.assertEqual(y_pred.shape, (self.batch_dim, self.target_dim))
 
-    # def test_training_acc_on_custom_model(self):
-    #     # Train the model
-    #     self.model.train(self.X, self.y, batch_size=2, epochs=100, optimizer=SGD(lr=0.1))
+    def test_training_acc_on_custom_model(self):
+        # Train the model
+        self.model.train(self.X, self.y, batch_size=2, epochs=100, optimizer=SGD(lr=0.1))
 
 
-    #     X_test = np.array([[0,0], [0,1], [1,0], [1,1]])
-    #     y_test = np.array([[0], [1], [1], [0]])
-    #     y_pred = self.model.predict(X_test)
+        X_test = np.array([[0,0], 
+                           [0,1], 
+                           [1,0], 
+                           [1,1]])
+        y_test = np.array([[0], [1], [1], [0]])
+        y_pred = self.model.predict(X_test)
 
-    #     # Check that the model has learned the XOR function
-    #     self.assertTrue(np.allclose(y_pred, y_test))
+        # Check that the model has learned the XOR function
+        self.assertTrue(np.allclose(y_pred, y_test))
 
 
 
