@@ -55,6 +55,7 @@ class Linear(GradLayer):
     def __init__(self, input_size: int, output_size: int) -> None:
         super().__init__(input_size, output_size)
 
+    # Could change the order of multiplication but this left to right convention is used in the Machine Perception course at ETH
     def forward(self, inputs: np.array) -> np.array:
         super().forward(inputs)
         return inputs @ self.weights + self.biases

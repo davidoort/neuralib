@@ -1,9 +1,8 @@
-from xmlrpc.client import Boolean
 import numpy as np
 from neuralib.layers import ComputationalLayer, Loss
 from abc import ABC,abstractmethod
 from neuralib.optimizers import Optimizer, SGD
-from typing import Union, List
+from typing import Union, List  
 
 class Architecture(ABC):
     def __init__(self) -> None:
@@ -30,7 +29,7 @@ class Architecture(ABC):
     def _backward(self, inputs, gradients):
         pass
 
-    def validate(self) -> Boolean:
+    def validate(self) -> bool:
         '''
         Validate the architecture.
         '''
