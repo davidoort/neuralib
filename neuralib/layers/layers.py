@@ -37,8 +37,8 @@ class GradLayer(ComputationalLayer):
         super().__init__()
         self.input_size = input_size
         self.output_size = output_size
-        self.weights = initialize_weights(input_size, output_size)
-        self.biases = initialize_weights(1, output_size)
+        self.weights = initialize_weights(input_size, output_size) # n_inputs x n_outputs
+        self.biases = initialize_weights(1, output_size) # 1 x n_outputs
         self.d_weights = np.zeros(self.weights.shape)
         self.d_biases = np.zeros(self.biases.shape)
 
@@ -79,5 +79,5 @@ class Linear(GradLayer):
 
         self.d_weights = self._input_cache.T @ gradients_top  # Shape of d_weights is the same as the shape of weights so n_inputs x n_outputs 
         self.d_biases = np.ones(shape=[1, gradients_top.shape[0]]) @ gradients_top # Shape of biases is 1 x n_outputs
-        return []
+        return gradients_top @ self.weights.T # Shape of gradients_prop is n_samples x n_inputs
     

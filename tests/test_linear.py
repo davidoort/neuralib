@@ -70,11 +70,11 @@ class LinearTest(TestCase):
             d_b
         )
 
-    # def test_grad_on_X(self):
-    #     self.layer.forward(self.input)
-    #     d_X = self.layer.backward(self.grad_top)
+    def test_grad_on_X(self):
+        self.layer.forward(self.input)
+        d_X = self.layer.backward(self.grad_top)
 
-    #     assert_array_almost_equal(
-    #         numerical_grad(self.layer.forward, self.input),
-    #         d_X
-    #     )
+        assert_array_almost_equal(
+            numerical_grad(self.layer.forward, self.input),
+            d_X
+        )
