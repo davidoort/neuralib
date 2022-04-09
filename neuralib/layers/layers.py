@@ -15,7 +15,7 @@ class ComputationalLayer(ABC):
 
     @abstractmethod
     def forward(self, inputs: np.array) -> np.array:
-        self._input_cache = inputs
+        self._input_cache = inputs # n_samples x n_inputs
         # TODO: add docstring? 
         pass
     
@@ -77,7 +77,7 @@ class Linear(GradLayer):
         """
 
 
-        self.d_weights  = []
+        self.d_weights = self._input_cache.T @ gradients_top  # Shape of d_weights is the same as the shape of weights so n_inputs x n_outputs 
         self.d_biases = np.ones(shape=[1, gradients_top.shape[0]]) @ gradients_top # Shape of biases is 1 x n_outputs
         return []
     

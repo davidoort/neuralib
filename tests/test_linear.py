@@ -38,21 +38,21 @@ class LinearTest(TestCase):
         assert_array_equal(self.layer._input_cache, self.input)
 
     # # test backward
-    # def test_grad_on_W(self):
-    #     self.layer.forward(self.input)
-    #     self.layer.backward(self.grad_top)
-    #     d_W = self.layer.d_W
+    def test_grad_on_W(self):
+        self.layer.forward(self.input)
+        self.layer.backward(self.grad_top)
+        d_W = self.layer.d_weights
 
-    #     layer = self.layer
+        layer = self.layer
 
-    #     def forward_as_func_of_W(W_):
-    #         layer.W = W_
-    #         return layer.forward(self.input)
+        def forward_as_func_of_W(W_):
+            layer.weights = W_
+            return layer.forward(self.input)
 
-    #     assert_array_almost_equal(
-    #         numerical_grad(forward_as_func_of_W, self.W),
-    #         d_W
-    #     )
+        assert_array_almost_equal(
+            numerical_grad(forward_as_func_of_W, self.W),
+            d_W
+        )
 
     def test_grad_on_b(self):
         self.layer.forward(self.input)
