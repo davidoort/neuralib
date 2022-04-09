@@ -20,7 +20,7 @@ class Sigmoid(ComputationalLayer):
             return self._d_sigmoid(self._input_cache)
 
         # Verify that the input cache is of the same shape as grad_top
-        assert self._X_cache.shape == grad_top.shape, "Input cache and grad_top must have the same shape"
+        assert self._input_cache.shape == grad_top.shape, "Input cache and grad_top must have the same shape"
 
         # TODO: Verify that element-wise multiplication is correct here
         return self._d_sigmoid(self._input_cache) * grad_top

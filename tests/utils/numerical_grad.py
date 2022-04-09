@@ -19,7 +19,6 @@ def numerical_grad(func, input_, h=1e-6):
     """
 
     if np.isscalar(input_):
-        # TODO: Not sure about the sum here... In cases where func is a scalar, it does nothing.
         return np.sum((func(input_ + h) - func(input_ - h)) / (2 * h))
 
     grad = np.zeros(input_.shape)

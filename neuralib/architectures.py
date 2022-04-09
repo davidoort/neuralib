@@ -1,11 +1,13 @@
 import numpy as np
 from neuralib.layers import ComputationalLayer, Loss
 from abc import ABC,abstractmethod
+from neuralib.layers.layers import GradLayer
 from neuralib.optimizers import Optimizer, SGD
 from typing import Union, List  
 
 class Architecture(ABC):
     def __init__(self) -> None:
+        self.layers = []
         pass
 
     @abstractmethod
@@ -13,13 +15,11 @@ class Architecture(ABC):
         assert(self.validate()), "Model is not valid"
 
 
-    def predict(self, input):
-        '''
-        When predicting, we do not want to do a loss pass.
-        '''
+    def predict(self, input, labels = None):
         assert(self.validate()), "Model is not valid"
-
-        return self._forward(input)[0]
+        if labels is None:
+            return self._forward(input)[0]
+        return self._forward(input, labels)
 
     @abstractmethod
     def _forward(self, input):
@@ -28,13 +28,15 @@ class Architecture(ABC):
     @abstractmethod
     def _backward(self, inputs, gradients):
         pass
-
+    
+    # TODO: do some more thorough checks, such as checking that the dimensions of adjacent layers match
     def validate(self) -> bool:
         '''
         Validate the architecture.
         '''
+        print("Validating architecture...")
+        print(self.layers)
         loss_layers = [layer for layer in self.layers[:-1] if isinstance(layer, Loss)]
-
         # Check that there is only one loss layer in self.layers and that it is at the end of the self.layers list
         if isinstance(self.layers[-1], Loss) and not loss_layers:
             return True
@@ -52,7 +54,6 @@ class Model(Architecture):
         super().__init__()
         self.training_loss = []
         self.layers = layers
-        # self.output = None
 
     def add(self, layer: ComputationalLayer) -> None:
         self.layers.append(layer)
@@ -72,7 +73,7 @@ class Model(Architecture):
                 self._backward()
 
                 # Update the weights and biases of each layer
-                for layer in self.layers:
+                for layer in [l for l in self.layers if isinstance(l, GradLayer)]:
                     layer.update(optimizer)
 
         
@@ -109,4 +110,5 @@ class Model(Architecture):
     #     plt.xlabel('Epochs')
     #     plt.ylabel('Training Error')
 
+# TODO: implement parametrizable MLP model using Model class
 # class MLP(Model):

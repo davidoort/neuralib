@@ -37,9 +37,8 @@ class XorDataTest(TestCase):
         self.assertEqual(y_pred.shape, (self.batch_dim, self.target_dim))
 
     # def test_training_acc_on_custom_model(self):
-
     #     # Train the model
-    #     self.model.train(self.X, self.y, epochs=100, optimizer=SGD(lr=0.1))
+    #     self.model.train(self.X, self.y, batch_size=2, epochs=100, optimizer=SGD(lr=0.1))
 
 
     #     X_test = np.array([[0,0], [0,1], [1,0], [1,1]])
