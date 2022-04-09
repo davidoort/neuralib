@@ -4,10 +4,10 @@ import numpy as np
 from numpy.testing import assert_array_equal, assert_array_almost_equal
 
 from neuralib.layers import Linear
-from tests.utils import numerical_grad
+from tests.utils.numerical_grad import numerical_grad
 
 
-class FullyConnectedTest(TestCase):
+class LinearTest(TestCase):
     input_dim = 3
     num_neurons = 4
 
@@ -54,21 +54,21 @@ class FullyConnectedTest(TestCase):
     #         d_W
     #     )
 
-    # def test_grad_on_b(self):
-    #     self.layer.forward(self.input)
-    #     self.layer.backward(self.grad_top)
-    #     d_b = self.layer.d_b
+    def test_grad_on_b(self):
+        self.layer.forward(self.input)
+        self.layer.backward(self.grad_top)
+        d_b = self.layer.d_biases
 
-    #     layer = self.layer
+        layer = self.layer
 
-    #     def forward_as_func_of_b(b_):
-    #         layer.b = b_
-    #         return layer.forward(self.input)
+        def forward_as_func_of_b(b_):
+            layer.biases = b_
+            return layer.forward(self.input)
 
-    #     assert_array_almost_equal(
-    #         numerical_grad(forward_as_func_of_b, self.b),
-    #         d_b
-    #     )
+        assert_array_almost_equal(
+            numerical_grad(forward_as_func_of_b, self.b),
+            d_b
+        )
 
     # def test_grad_on_X(self):
     #     self.layer.forward(self.input)

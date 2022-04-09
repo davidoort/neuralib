@@ -39,16 +39,16 @@ class GradLayer(ComputationalLayer):
         self.output_size = output_size
         self.weights = initialize_weights(input_size, output_size)
         self.biases = initialize_weights(1, output_size)
-        self.dweights = np.zeros(self.weights.shape)
-        self.dbiases = np.zeros(self.biases.shape)
+        self.d_weights = np.zeros(self.weights.shape)
+        self.d_biases = np.zeros(self.biases.shape)
 
     def update(self, optimizer: Optimizer) -> None:
-        self.weights += optimizer.step(self.dweights)
-        self.biases += optimizer.step(self.dbiases)
+        self.weights += optimizer.step(self.d_weights)
+        self.biases += optimizer.step(self.d_biases)
 
     # def zero_grad(self) -> None:
-    #     self.dweights = np.zeros(self.weights.shape)
-    #     self.dbiases = np.zeros(self.biases.shape)
+    #     self.d_weights = np.zeros(self.weights.shape)
+    #     self.d_biases = np.zeros(self.biases.shape)
 
 
 class Linear(GradLayer):
@@ -64,7 +64,7 @@ class Linear(GradLayer):
         """_summary_
 
         Args:
-            gradients_top (_type_): _description_
+            gradients_top (np.array): n_sample x n_outputs
 
         Returns:
             np.array: _description_
@@ -72,12 +72,12 @@ class Linear(GradLayer):
         It's important to distingush 4 types of gradients:
         - d_loss_d_layer_outputs            (gradients_top):    Gradients of the loss with respect to the layer outputs.
         - d_loss_d_layer_inputs             (gradients_prop):   Gradients of the loss with respect to the layer inputs. This is what is returned and propagated to the previous layer.
-        - d_loss_d_layer_weights            (self.dweights):    Gradients of the loss with respect to the layer weights. What is needed to update the weights.
-        - d_loss_d_layer_biases             (self.dbiases):     Gradients of the loss with respect to the layer biases. What is needed to update the biases.
+        - d_loss_d_layer_weights            (self.d_weights):    Gradients of the loss with respect to the layer weights. What is needed to update the weights.
+        - d_loss_d_layer_biases             (self.d_biases):     Gradients of the loss with respect to the layer biases. What is needed to update the biases.
         """
 
 
-        self.dweights  = []
-        self.dbiases = []
+        self.d_weights  = []
+        self.d_biases = np.ones(shape=[1, gradients_top.shape[0]]) @ gradients_top # Shape of biases is 1 x n_outputs
         return []
     
