@@ -85,11 +85,11 @@ class Model(Architecture):
             # Assuming that there is only one loss layer and it's the last layer in the model
             if isinstance(layer, Loss):
                 if targets is not None:
-                    loss = layer.forward(output, targets)
+                    _, loss = layer.forward(output, targets)
                 continue
             output = layer.forward(output)
          
-        return output.squeeze(), loss
+        return output, loss
 
     def _backward(self) -> None:
         '''

@@ -31,6 +31,10 @@ class ComputationalLayer(ABC):
         """
         pass
 
+    # @abstractmethod
+    # def clear_cache(self):
+    #     self._input_cache = None
+
 
 class GradLayer(ComputationalLayer):
     def __init__(self, input_size, output_size) -> None:

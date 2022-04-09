@@ -7,26 +7,24 @@ from neuralib.layers import Linear
 from neuralib.layers.activations import Sigmoid
 from neuralib.layers.losses import MSE
 from neuralib.optimizers import SGD
-from tests.utils import xor_data
+from neuralib.utils import xor_data
 
 
 class XorDataTest(TestCase):
 
     # Create custom model
     def setUp(self) -> None:
-        self.batch_dim = 50   # number of examples (data points)
+        # self.batch_dim = 4   # number of examples (data points)
         self.input_dim = 2    # number of features (dimensionality of the data)
         self.hidden_dim = 50   # number of neurons in the hidden layer
-        self.target_dim = 1    # label dimensionality 
+        self.target_dim = 1   # label dimensionality 
 
-        np.random.seed(0)
-        self.X, self.y = xor_data(num_examples=self.batch_dim)
+        self.X = np.array([[0,0], [0,1], [1,0], [1,1]])
+        self.y = np.array([ [0],   [1],   [1],   [0]])
+        # self.X, self.y = xor_data(num_examples=self.batch_dim)
 
-        self.model = Model()
-        self.model.add(Linear(input_size=self.input_dim, output_size=self.hidden_dim))
-        self.model.add(Sigmoid())
-        self.model.add(Linear(input_size=self.hidden_dim, output_size=self.target_dim))
-        self.model.add(MSE())
+        # in one line
+        self.model = Model([Linear(input_size=self.input_dim, output_size=self.hidden_dim), Sigmoid(), Linear(input_size=self.hidden_dim, output_size=self.target_dim), MSE()])
 
     def test_prediction_on_init_weights(self):
 
@@ -34,11 +32,11 @@ class XorDataTest(TestCase):
 
         # Check that y_pred is not None and that it has the right shape.
         self.assertIsNotNone(y_pred)
-        self.assertEqual(y_pred.shape, (self.batch_dim, self.target_dim))
+        self.assertEqual(y_pred.shape, (self.y.shape[0], self.target_dim))
 
     def test_training_acc_on_custom_model(self):
         # Train the model
-        self.model.train(self.X, self.y, batch_size=2, epochs=100, optimizer=SGD(lr=0.1))
+        self.model.train(self.X, self.y, batch_size=4, epochs=10000, optimizer=SGD(lr=0.1))
 
 
         X_test = np.array([[0,0], 

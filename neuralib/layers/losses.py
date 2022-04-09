@@ -27,11 +27,14 @@ class MSE(Loss):
 
         residual = y_pred - y_true
         error = np.sum(residual**2)/(2*y_pred.shape[0])
+        assert(error >= 0), "Error must be non-negative"
+
         return residual, error  
 
     def backward(self) -> np.array:
         assert (self._pred_cache is not None and self._targets_cache is not None), "Forward pass required before backward pass"
         super().backward(self._pred_cache, self._targets_cache)
         d_mse_d_y_pred = (self._pred_cache - self._targets_cache) / self._pred_cache.shape[0]
+        # clear_cache()
         return d_mse_d_y_pred
 
