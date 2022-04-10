@@ -1,3 +1,4 @@
 name: neuralib
 dependencies:
   - numpy
+  - matplotlib
