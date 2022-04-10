@@ -9,44 +9,61 @@ class ComputationalLayer(ABC):
     The forward method is used to compute the output of the layer.
     The backward method is used to compute the gradient of the layer inputs with respect to the layer outputs.
     '''
-    def __init__(self) -> None:
+    _input_cache: np.ndarray
+
+    def __init__(self, input_size: int = None, output_size: int = None) -> None:
+        """Layers that change the input size or output size should pass the input and output size to the constructor. 
+        This is used during validation of the architecture.
+
+        Args:
+            input_size (int, optional): Input size of the layer. Defaults to None.
+            output_size (int, optional): Output size of the layer. Defaults to None.
+        """
         self._input_cache = None
-        pass
+        self.input_size = input_size
+        self.output_size = output_size
+
 
     @abstractmethod
     def forward(self, inputs: np.array) -> np.array:
+        """The forward pass (computation) of the layer. Inputs are stored in a cache for the backward pass.
+
+        Args:
+            inputs (n_samples x n_inputs): Inputs to the layer. 
+
+        Returns:
+            np.array: (n_samples x n_outputs) Output of the layer.
+        """
         self._input_cache = inputs # n_samples x n_inputs
-        # TODO: add docstring? 
-        pass
     
     @abstractmethod
-    def backward(self, gradients_top):
+    def backward(self, gradients_top: np.array) -> np.array:
         """Backward pass of the layer.
 
         Args:
             gradients_top (n_model_outputs x n_layer_outputs): Gradients of the top layer outputs (loss) with respect to the layer outputs.
         
-        Inputs could explicitly be passed to the backward method, but it is not required, 
-        if the forward method has been called before and they are stored in a cache.
+        Inputs to the layer required for the backward pass are stored in the _input_cache.
         """
         pass
 
-    # @abstractmethod
-    # def clear_cache(self):
-    #     self._input_cache = None
-
 
 class GradLayer(ComputationalLayer):
-    def __init__(self, input_size, output_size) -> None:
-        super().__init__()
-        self.input_size = input_size
-        self.output_size = output_size
+    def __init__(self, input_size: int, output_size: int) -> None:
+        super().__init__(input_size, output_size)
         self.weights = initialize_weights(input_size, output_size) # n_inputs x n_outputs
         self.biases = initialize_weights(1, output_size) # 1 x n_outputs
-        self.d_weights = np.zeros(self.weights.shape)
-        self.d_biases = np.zeros(self.biases.shape)
+        self.d_weights = np.zeros(self.weights.shape) # n_inputs x n_outputs = weights.shape
+        self.d_biases = np.zeros(self.biases.shape) # 1 x n_outputs = biases.shape
 
     def update(self, optimizer: Optimizer) -> None:
+        """Update the weights and biases of the layer using the gradients computed 
+        during the backward pass and an optimizer of choice.
+
+        Args:
+            optimizer (Optimizer): The optimizer step method is called to calculate 
+            the increment of the weights and biases based on their gradient.
+        """
         self.weights += optimizer.step(self.d_weights)
         self.biases += optimizer.step(self.d_biases)
 
@@ -57,6 +74,14 @@ class Linear(GradLayer):
 
     # Could change the order of multiplication but this left to right convention is used in the Machine Perception course at ETH
     def forward(self, inputs: np.array) -> np.array:
+        """The forward pass of the linear layer performs a matrix multiplication between the inputs and the weights and adds the biases.
+
+        Args:
+            inputs (n_samples x n_inputs): Inputs to the linear layer.
+
+        Returns:
+            (n_samples x n_outputs): Layer outputs.
+        """
         super().forward(inputs)
         return inputs @ self.weights + self.biases
 
