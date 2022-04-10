@@ -3,7 +3,8 @@ from neuralib.layers.layers import ComputationalLayer
 
 class Sigmoid(ComputationalLayer):
     def __init__(self):
-        pass
+        super().__init__()
+        
     def forward(self, input):
         """
         Computes the sigmoid function sigm(input) = 1/(1+exp(-input))
@@ -22,7 +23,6 @@ class Sigmoid(ComputationalLayer):
         # Verify that the input cache is of the same shape as grad_top
         assert self._input_cache.shape == grad_top.shape, "Input cache and grad_top must have the same shape"
 
-        # TODO: Verify that element-wise multiplication is correct here
         return self._d_sigmoid(self._input_cache) * grad_top
 
     def _sigmoid(self, x: np.array) -> np.array:
