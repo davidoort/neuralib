@@ -10,11 +10,10 @@ from numpy.testing import assert_equal
 
 class ValidationTest(TestCase):
 
-    def setUp(self):
-        self.model = Model()
-        self.model.add(MSE())
+    model = Model()
 
     def test_loss_validation(self):
+        self.model.add(MSE())
         assert_equal(self.model.validate(), True)
 
     def test_with_invalid_order_linear(self):
