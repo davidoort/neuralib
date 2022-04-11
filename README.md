@@ -1,4 +1,5 @@
 # Neuralib: a tiny library developed to demistify neural networks
+![Neuralib](img/neuralib_landscape.png)
 This small python module has been developed purely for learning purposes. It's an implementation of simple neural networks using numpy as only dependency.
 
 > *"…everything became much clearer when I started writing code."* - Andrej Karpathy
