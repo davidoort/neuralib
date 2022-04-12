@@ -4,6 +4,25 @@ This small python module has been developed purely for learning purposes. It's a
 
 > *"…everything became much clearer when I started writing code."* - Andrej Karpathy
 
+## Supported features
+Neuralib is designed to provide a suite of submodules that can be used separately or combined into custom neural net architectures. These submodules, and their classes are:
+
+`neuralib.optimizers`: A submodule containing optimizers that define parameter update rules based on loss gradients.
+- **Vanilla Gradient Descent (VGD)**: This optimizer simply updates parameters by multiplying a fixed learning rate `lr` by the gradient of the loss with respect to these parameters.
+
+`neuralib.layers`: In neuralib, everything that performs a computation on inputs and returns an output is treated as a layer. The simplest form of a layer is a `ComputationalLayer`, which performs a fixed computation and does not contain parameters to be optimized. A `GradLayer` is built on top of a `ComputationalLayer` and additionally contains parameters to be optimized during training. Currently supported layers include:
+- `neuralib.layers.losses`
+    - **Mean-Squared Error (MSE)**
+- `neuralib.layers.activations`
+    - **Sigmoid**
+- `neuralib.layers.layers`:
+    - **Linear** (or Fully-Connected Layer)
+
+`neuralib.architectures`: Neuralib architectures are an abstraction built on top of the above submodule components. They allow the user to quickly specify a model architecture, train and test it.
+- **Model**: a generic sequential model that can be customized to any valid sequence of layers from `neuralib.layers`. The forward pass and backpropagation have been implemented.
+
+In addition to these submodules, a test suite in `tests/` contains unit and integration tests to ensure that active development of this library does not cause regressions.
+
 ## Using neuralib
 To update your conda environment so that neuralib dependencies are met, run:
 `conda env update --file environment.yml --prune

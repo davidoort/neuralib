@@ -6,7 +6,7 @@ from neuralib import Model
 from neuralib.layers import Linear
 from neuralib.layers.activations import Sigmoid
 from neuralib.layers.losses import MSE
-from neuralib.optimizers import SGD
+from neuralib.optimizers import VGD
 from neuralib.utils import xor_data
 
 
@@ -36,7 +36,7 @@ class XorDataTest(TestCase):
 
     def test_training_acc_on_custom_model(self):
         # Train the model
-        self.model.train(self.X, self.y, batch_size=4, epochs=10000, optimizer=SGD(lr=0.1))
+        self.model.train(self.X, self.y, batch_size=4, epochs=10000, optimizer=VGD(lr=0.1))
 
 
         X_test = np.array([[0,0], 
@@ -48,6 +48,8 @@ class XorDataTest(TestCase):
 
         # Check that the model has learned the XOR function
         self.assertTrue(np.allclose(y_pred, y_test))
+    
+    # TODO: test that without activation the linear model does not learn the XOR function
 
 
 

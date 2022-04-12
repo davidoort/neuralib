@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from neuralib import Model
 from neuralib.layers import Linear, Sigmoid, MSE
-from neuralib.optimizers import SGD
+from neuralib.optimizers import VGD
 
 # from neuralib.utils import xor_data
 
@@ -58,7 +58,7 @@ if __name__ == '__main__':
     X = np.array([[0,0], [0,1], [1,0], [1,1]])
     y = np.array([ [0],   [1],   [1],   [0]])
 
-    model.train(X, y, batch_size=4, epochs=10000, optimizer=SGD(lr=0.1))
+    model.train(X, y, batch_size=4, epochs=10000, optimizer=VGD(lr=0.1))
     y_pred, loss = model.predict(X, y)
 
     print("Training loss: ", loss)
