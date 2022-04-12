@@ -31,6 +31,14 @@ class Loss(ComputationalLayer):
             np.array: Gradient of the loss with respect to the prediction (tensor)
         """
         assert (self._targets_cache.shape == self._pred_cache.shape), "y_pred and targets must have same shape"
+    
+    def __eq__(self, other) -> bool:
+        if super().__eq__(other):
+            if isinstance(other, Loss):
+                return True
+            else:
+                return False
+        return False
 
 class MSE(Loss):
     '''
@@ -62,7 +70,7 @@ class MSE(Loss):
             raise
         if isnan(error):
             error = np.inf
-            
+
         assert(error >= 0), "Error must be non-negative"
 
         return residual, error  
@@ -79,3 +87,10 @@ class MSE(Loss):
         d_mse_d_y_pred = (self._pred_cache - self._targets_cache) / self._pred_cache.shape[0]
         return d_mse_d_y_pred
 
+    def __eq__(self, other) -> bool:
+        if super().__eq__(other):
+            if isinstance(other, MSE):
+                return True
+            else:
+                return False
+        return False

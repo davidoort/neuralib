@@ -66,13 +66,4 @@ class XorDataTest(TestCase):
         # Check that the model has learned the XOR function
         self.assertFalse(np.allclose(y_pred, self.y))
 
-    def test_get_params(self):
-        params = self.model.get_params()
-        self.assertEqual(len(params), len([l for l in self.model.layers if isinstance(l, GradLayer)]))
-
-        # Compare total number of params. This currently only works because the layers are linear
-        pred_n_params = sum([p['n_params'] for p in params])  
-        n_params = sum([p['weights'].size + p['biases'].size for p in params])
-        self.assertEqual(pred_n_params, n_params)
-
    

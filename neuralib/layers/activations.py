@@ -47,3 +47,10 @@ class Sigmoid(ComputationalLayer):
         """
         return np.multiply(self._sigmoid(x), 1.0-self._sigmoid(x))
 
+    def __eq__(self, other) -> bool:
+        if super().__eq__(other):
+            if isinstance(other, Sigmoid):
+                return True
+            else:
+                return False
+        return False

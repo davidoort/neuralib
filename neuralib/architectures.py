@@ -2,7 +2,9 @@ from matplotlib import pyplot as plt
 import numpy as np
 from neuralib.layers import ComputationalLayer, Loss
 from abc import ABC,abstractmethod
-from neuralib.layers.layers import GradLayer
+from neuralib.layers.activations import Sigmoid
+from neuralib.layers.layers import GradLayer, Identity, Linear
+from neuralib.layers.losses import MSE
 from neuralib.optimizers import Optimizer, VGD
 from typing import Union, List  
 
@@ -93,6 +95,9 @@ class Model(Architecture):
         super().__init__()
         self.training_loss = []
         self.layers = layers
+
+        if len(self.layers) != 0:
+            self.validate()
 
     def add(self, layer: ComputationalLayer) -> None:
         # Add a layer to the end of the model
@@ -202,5 +207,42 @@ class Model(Architecture):
         plt.xlabel('Epochs')
         plt.ylabel('Training Error')
 
-# TODO: implement parametrizable MLP model using Model class
-# class MLP(Model):
+class MLP(Model):
+    """
+    Multi-layer perceptron model.
+    """
+    def __init__(self, input_size: int, output_size: int, hidden_size: List[int] = None, activations: List[ComputationalLayer] = [Sigmoid()], loss: Loss = MSE()) -> None:
+        """Create an array of layers based on high-level inputs and pass it down to the base class Model.
+
+        Args:
+            input_size (int): The dimension of the MLP input.
+            output_size (int): The dimension of the MLP output.
+            hidden_size (n_hidden, optional): The size of each hidden layer. Defaults to None (no hidden layer).
+            activation (ComputationalLayer, optional): The type of activation function used at the end of each linear layer. The length should be n_hidden+2 or 1 if the same activation is used everywhere. Defaults to [Sigmoid()].
+            loss (Loss, optional): The loss function used at the end of the model. Defaults to MSE().
+        """
+        # Wrap in a list if hidden_size is not a list
+        if not isinstance(hidden_size, list):
+            hidden_size = [hidden_size]
+
+        n_hidden = len(hidden_size) if hidden_size is not None else 0
+    
+        assert(len(activations) == n_hidden+1 or len(activations) == 1)
+
+        in_layer = Linear(input_size, hidden_size[0])
+        out_layer = Linear(hidden_size[-1], output_size)
+        layers = [in_layer, activations[0]]
+        # If n_hidden = 1 this will be skipped because the hidden layer is implicitly created between the input and output layers
+        for i in range(n_hidden-1):
+            layers.append(Linear(hidden_size[i], hidden_size[i+1]))
+            if len(activations) == 1:
+                layers.append(activations[0])
+            if not isinstance(activations[i+1], Identity): layers.append(activations[i+1])
+        layers.append(out_layer)
+        if not isinstance(activations[-1], Identity): layers.append(activations[-1])
+        layers.append(loss)
+
+        super().__init__(layers)
+        
+
+   
