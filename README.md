@@ -16,6 +16,7 @@ Neuralib is designed to provide a suite of submodules that can be used separatel
 - `neuralib.layers.activations`
     - **Sigmoid**
     - **ReLU**
+    - **Tanh**
 - `neuralib.layers.layers`:
     - **Linear** (or Fully-Connected Layer)
 
