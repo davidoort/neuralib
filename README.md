@@ -15,11 +15,14 @@ Neuralib is designed to provide a suite of submodules that can be used separatel
     - **Mean-Squared Error (MSE)**
 - `neuralib.layers.activations`
     - **Sigmoid**
+    - **ReLU**
+    - **Tanh**
 - `neuralib.layers.layers`:
     - **Linear** (or Fully-Connected Layer)
 
 `neuralib.architectures`: Neuralib architectures are an abstraction built on top of the above submodule components. They allow the user to quickly specify a model architecture, train and test it.
 - **Model**: a generic sequential model that can be customized to any valid sequence of layers from `neuralib.layers`. The forward pass and backpropagation have been implemented.
+- **Multi-layer Perception (MLP)**: Simple architecture built on top of `Model` using higher-level inputs to construct the layers of the network.
 
 In addition to these submodules, a test suite in `tests/` contains unit and integration tests to ensure that active development of this library does not cause regressions.
 

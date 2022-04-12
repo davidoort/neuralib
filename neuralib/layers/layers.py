@@ -1,3 +1,4 @@
+import typing
 import numpy as np
 from neuralib.utils import initialize_weights
 from abc import ABC,abstractmethod
@@ -47,6 +48,13 @@ class ComputationalLayer(ABC):
         """
         pass
 
+    @abstractmethod
+    def __eq__(self, other) -> bool:
+        if self.input_size==other.input_size and self.output_size==other.output_size and isinstance(other, ComputationalLayer):
+            return True
+        else:
+            return False
+
 
 class GradLayer(ComputationalLayer):
     def __init__(self, input_size: int, output_size: int) -> None:
@@ -57,7 +65,8 @@ class GradLayer(ComputationalLayer):
         self.d_biases = np.zeros(self.biases.shape) # 1 x n_outputs = biases.shape
 
     def update(self, optimizer: Optimizer) -> None:
-        """Update the weights and biases of the layer using the gradients computed 
+        """
+        Update the weights and biases of the layer using the gradients computed 
         during the backward pass and an optimizer of choice.
 
         Args:
@@ -67,7 +76,44 @@ class GradLayer(ComputationalLayer):
         self.weights += optimizer.step(self.d_weights)
         self.biases += optimizer.step(self.d_biases)
 
+    def get_params(self) -> typing.Dict[str, np.array]:
+        """
+        Method that returns all the parameters of the layer (weights and biases) in a dictionary
+        as well as the number of parameters in the layer.
+        """ 
+        return {'weights': self.weights, 'biases': self.biases, 'n_params': self.weights.size + self.biases.size}
 
+    def __eq__(self, other) -> bool:
+        if super().__eq__(other):
+            if isinstance(other, GradLayer):
+                return True
+            else:
+                return False
+        return False
+            
+class Identity(ComputationalLayer):
+    '''
+    Auxiliary class that can be used as an "identity" placeholder for layers.
+    '''
+    def __init__(self, input_size: int = None, output_size: int = None) -> None:
+        super().__init__(input_size, output_size)
+
+    def forward(self, inputs: np.array) -> np.array:
+        # This layer does not modify the inputs, so we can just return them.
+        return inputs
+
+    def backward(self, gradients_top: np.array) -> np.array:
+        # This layer does not modify the inputs, so the gradient of the output with respect to the inputs is just np.ones(inputs.shape)
+        # so we can just return the gradient of the top layers.
+        return gradients_top
+
+    def __eq__(self, other) -> bool:
+        if super().__eq__(other):
+            if isinstance(other, Identity):
+                return True
+            else:
+                return False
+        return False
 class Linear(GradLayer):
     def __init__(self, input_size: int, output_size: int) -> None:
         super().__init__(input_size, output_size)
@@ -105,4 +151,11 @@ class Linear(GradLayer):
         self.d_weights = self._input_cache.T @ gradients_top  # Shape of d_weights is the same as the shape of weights so n_inputs x n_outputs 
         self.d_biases = np.ones(shape=[1, gradients_top.shape[0]]) @ gradients_top # Shape of biases is 1 x n_outputs
         return gradients_top @ self.weights.T # Shape of gradients_prop is n_samples x n_inputs
-    
+
+    def __eq__(self, other) -> bool:
+        if super().__eq__(other):
+            if isinstance(other, Linear):
+                return True
+            else:
+                return False
+        return False
