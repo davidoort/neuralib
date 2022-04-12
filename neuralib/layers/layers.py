@@ -1,3 +1,4 @@
+import typing
 import numpy as np
 from neuralib.utils import initialize_weights
 from abc import ABC,abstractmethod
@@ -75,7 +76,7 @@ class GradLayer(ComputationalLayer):
         self.weights += optimizer.step(self.d_weights)
         self.biases += optimizer.step(self.d_biases)
 
-    def get_params(self) -> dict[str, np.array]:
+    def get_params(self) -> typing.Dict[str, np.array]:
         """
         Method that returns all the parameters of the layer (weights and biases) in a dictionary
         as well as the number of parameters in the layer.

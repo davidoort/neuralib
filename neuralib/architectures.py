@@ -6,6 +6,7 @@ from neuralib.layers.activations import Sigmoid
 from neuralib.layers.layers import GradLayer, Identity, Linear
 from neuralib.layers.losses import MSE
 from neuralib.optimizers import Optimizer, VGD
+import typing
 from typing import Union, List  
 
 class Architecture(ABC):
@@ -78,7 +79,7 @@ class Architecture(ABC):
         return True
     
     @abstractmethod
-    def get_params(self) -> List[dict[str, np.array]]:
+    def get_params(self) -> List[typing.Dict[str, np.array]]:
         """
         Return a list of the parameters of each layer in the model.
         """
@@ -193,7 +194,7 @@ class Model(Architecture):
                 continue
             gradient = layer.backward(gradient)
 
-    def get_params(self) -> List[dict[str, np.array]]:
+    def get_params(self) -> List[typing.Dict[str, np.array]]:
         """
         Return a list of the parameters of each layer in the sequential model.
         """
