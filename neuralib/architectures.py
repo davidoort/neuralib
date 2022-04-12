@@ -3,7 +3,7 @@ import numpy as np
 from neuralib.layers import ComputationalLayer, Loss
 from abc import ABC,abstractmethod
 from neuralib.layers.layers import GradLayer
-from neuralib.optimizers import Optimizer, SGD
+from neuralib.optimizers import Optimizer, VGD
 from typing import Union, List  
 
 class Architecture(ABC):
@@ -11,7 +11,7 @@ class Architecture(ABC):
         self.layers = []
 
     @abstractmethod
-    def train(self, X: np.array, y: np.array, batch_size: int, epochs: int, optimizer: Optimizer = SGD(lr=0.1)) -> None:
+    def train(self, X: np.array, y: np.array, batch_size: int, epochs: int, optimizer: Optimizer = VGD(lr=0.1)) -> None:
         """Train the architecture.
 
         Args:
@@ -19,7 +19,7 @@ class Architecture(ABC):
             y (n_samples x label_dim): Training labels.
             batch_size (int): Number of samples per batch.
             epochs (int): Number of epochs.
-            optimizer (Optimizer, optional): Optimizer used to update architecture parameters. Defaults to SGD(lr=0.1).
+            optimizer (Optimizer, optional): Optimizer used to update architecture parameters. Defaults to VGD(lr=0.1).
         """
         assert(self.validate()), "Model is not valid"
 
@@ -117,7 +117,7 @@ class Model(Architecture):
         return True
 
   
-    def train(self, X: np.array, y: np.array, batch_size: int, epochs: int, optimizer: Optimizer = SGD(lr=0.1)) -> None:
+    def train(self, X: np.array, y: np.array, batch_size: int, epochs: int, optimizer: Optimizer = VGD(lr=0.1)) -> None:
         """
         Standard training script that iterates over the training data in batches, 
         performs a forward and backward pass on all layers and updates the parameters of each layer.
@@ -127,7 +127,7 @@ class Model(Architecture):
             y (n_samples x label_dim): Training labels.
             batch_size (int): Number of samples per batch.
             epochs (int): Number of epochs.
-            optimizer (Optimizer, optional): Optimizer used to update architecture parameters. Defaults to SGD(lr=0.1).
+            optimizer (Optimizer, optional): Optimizer used to update architecture parameters. Defaults to VGD(lr=0.1).
         """
         super().train(X, y, batch_size, epochs, optimizer)
         for _ in range(epochs):

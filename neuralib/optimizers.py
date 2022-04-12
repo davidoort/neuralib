@@ -17,7 +17,7 @@ class Optimizer(ABC):
         """
         pass
 
-class SGD(Optimizer):
+class VGD(Optimizer):
     '''
     Stochastic Gradient Descent
     '''

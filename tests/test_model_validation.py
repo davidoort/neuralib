@@ -29,3 +29,5 @@ class ValidationTest(TestCase):
     def test_with_valid_order_activation(self):
         self.model.add_front(Sigmoid())
         assert_equal(self.model.validate(), True)
+
+    # TODO: test that incompatible linear layers fail validation
