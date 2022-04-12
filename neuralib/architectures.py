@@ -75,7 +75,12 @@ class Architecture(ABC):
         
         return True
     
-
+    @abstractmethod
+    def get_params(self) -> List[dict[str, np.array]]:
+        """
+        Return a list of the parameters of each layer in the model.
+        """
+        pass
 
 
 class Model(Architecture):
@@ -182,6 +187,13 @@ class Model(Architecture):
                 gradient = layer.backward()
                 continue
             gradient = layer.backward(gradient)
+
+    def get_params(self) -> List[dict[str, np.array]]:
+        """
+        Return a list of the parameters of each layer in the sequential model.
+        """
+        super().get_params()
+        return [layer.get_params() for layer in self.layers if isinstance(layer, GradLayer)]
 
     def plot_progress(self):
         # Plot training error progression over time

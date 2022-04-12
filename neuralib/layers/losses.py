@@ -1,3 +1,4 @@
+from cmath import isnan
 import numpy as np
 from neuralib.layers.layers import ComputationalLayer
 from typing import Union
@@ -51,7 +52,17 @@ class MSE(Loss):
         super().forward(y_pred, y_true)
 
         residual = y_pred - y_true
-        error = np.sum(residual**2)/(2*y_pred.shape[0])
+        try:
+            error = np.sum(residual**2)/(2*y_pred.shape[0])
+        except OverflowError as err:
+            # Set error to infinity 
+            print('Overflowed after ', error, err)
+            error = np.inf
+        except:
+            raise
+        if isnan(error):
+            error = np.inf
+            
         assert(error >= 0), "Error must be non-negative"
 
         return residual, error  

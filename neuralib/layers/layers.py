@@ -57,7 +57,8 @@ class GradLayer(ComputationalLayer):
         self.d_biases = np.zeros(self.biases.shape) # 1 x n_outputs = biases.shape
 
     def update(self, optimizer: Optimizer) -> None:
-        """Update the weights and biases of the layer using the gradients computed 
+        """
+        Update the weights and biases of the layer using the gradients computed 
         during the backward pass and an optimizer of choice.
 
         Args:
@@ -66,6 +67,13 @@ class GradLayer(ComputationalLayer):
         """
         self.weights += optimizer.step(self.d_weights)
         self.biases += optimizer.step(self.d_biases)
+
+    def get_params(self) -> dict[str, np.array]:
+        """
+        Method that returns all the parameters of the layer (weights and biases) in a dictionary
+        as well as the number of parameters in the layer.
+        """ 
+        return {'weights': self.weights, 'biases': self.biases, 'n_params': self.weights.size + self.biases.size}
 
 
 class Linear(GradLayer):

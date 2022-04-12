@@ -46,3 +46,4 @@ class Sigmoid(ComputationalLayer):
             np.array: output matrix/vector of the same size as the input
         """
         return np.multiply(self._sigmoid(x), 1.0-self._sigmoid(x))
+

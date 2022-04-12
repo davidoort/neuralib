@@ -1,10 +1,14 @@
 from unittest import TestCase
 
+import warnings
+import pytest
+
 import numpy as np
 
 from neuralib import Model
 from neuralib.layers import Linear
 from neuralib.layers.activations import Sigmoid
+from neuralib.layers.layers import GradLayer
 from neuralib.layers.losses import MSE
 from neuralib.optimizers import VGD
 from neuralib.utils import xor_data
@@ -39,18 +43,36 @@ class XorDataTest(TestCase):
         self.model.train(self.X, self.y, batch_size=4, epochs=10000, optimizer=VGD(lr=0.1))
 
 
-        X_test = np.array([[0,0], 
-                           [0,1], 
-                           [1,0], 
-                           [1,1]])
-        y_test = np.array([[0], [1], [1], [0]])
-        y_pred = self.model.predict(X_test)
+        # Test on training data
+        y_pred = self.model.predict(self.X)
 
         # Check that the model has learned the XOR function
-        self.assertTrue(np.allclose(y_pred, y_test))
-    
-    # TODO: test that without activation the linear model does not learn the XOR function
+        self.assertTrue(np.allclose(y_pred, self.y))
 
+    @pytest.mark.filterwarnings("ignore")
+    def test_xor_without_activation(self):
+        model = self.model
+        
+        # Pop the activation layer
+        model.pop(1)
 
+        print(model.layers)
+        # Train the model
+        model.train(self.X, self.y, batch_size=4, epochs=10000, optimizer=VGD(lr=0.1))
+
+        # Test on training data
+        y_pred = model.predict(self.X)
+
+        # Check that the model has learned the XOR function
+        self.assertFalse(np.allclose(y_pred, self.y))
+
+    def test_get_params(self):
+        params = self.model.get_params()
+        self.assertEqual(len(params), len([l for l in self.model.layers if isinstance(l, GradLayer)]))
+
+        # Compare total number of params. This currently only works because the layers are linear
+        pred_n_params = sum([p['n_params'] for p in params])  
+        n_params = sum([p['weights'].size + p['biases'].size for p in params])
+        self.assertEqual(pred_n_params, n_params)
 
    
