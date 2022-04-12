@@ -6,9 +6,10 @@ import pytest
 import numpy as np
 
 from neuralib import Model
+from neuralib.architectures import MLP
 from neuralib.layers import Linear
 from neuralib.layers.activations import Sigmoid
-from neuralib.layers.layers import GradLayer
+from neuralib.layers.layers import GradLayer, Identity
 from neuralib.layers.losses import MSE
 from neuralib.optimizers import VGD
 from neuralib.utils import xor_data
@@ -29,41 +30,45 @@ class XorDataTest(TestCase):
 
         # in one line
         self.model = Model([Linear(input_size=self.input_dim, output_size=self.hidden_dim), Sigmoid(), Linear(input_size=self.hidden_dim, output_size=self.target_dim), MSE()])
+    
+        self.mlp_model = MLP(input_size=self.input_dim, hidden_size=self.hidden_dim, output_size=self.target_dim, activations=[Sigmoid(), Identity()], loss=MSE())
 
+        self.models = [self.model, self.mlp_model]
     def test_prediction_on_init_weights(self):
+        for model in self.models:
+            y_pred = model.predict(self.X)
 
-        y_pred = self.model.predict(self.X)
-
-        # Check that y_pred is not None and that it has the right shape.
-        self.assertIsNotNone(y_pred)
-        self.assertEqual(y_pred.shape, (self.y.shape[0], self.target_dim))
+            # Check that y_pred is not None and that it has the right shape.
+            self.assertIsNotNone(y_pred)
+            self.assertEqual(y_pred.shape, (self.y.shape[0], self.target_dim))
 
     def test_training_acc_on_custom_model(self):
-        # Train the model
-        self.model.train(self.X, self.y, batch_size=4, epochs=10000, optimizer=VGD(lr=0.1))
+        for model in self.models:
+            # Train the model
+            model.train(self.X, self.y, batch_size=4, epochs=10000, optimizer=VGD(lr=0.1))
 
 
-        # Test on training data
-        y_pred = self.model.predict(self.X)
+            # Test on training data
+            y_pred = model.predict(self.X)
 
-        # Check that the model has learned the XOR function
-        self.assertTrue(np.allclose(y_pred, self.y))
+            # Check that the model has learned the XOR function
+            self.assertTrue(np.allclose(y_pred, self.y))
 
     @pytest.mark.filterwarnings("ignore")
     def test_xor_without_activation(self):
-        model = self.model
-        
-        # Pop the activation layer
-        model.pop(1)
+        for model in self.models:
 
-        print(model.layers)
-        # Train the model
-        model.train(self.X, self.y, batch_size=4, epochs=10000, optimizer=VGD(lr=0.1))
+            # Pop the activation layer
+            model.pop(1)
 
-        # Test on training data
-        y_pred = model.predict(self.X)
+            print(model.layers)
+            # Train the model
+            model.train(self.X, self.y, batch_size=4, epochs=10000, optimizer=VGD(lr=0.1))
 
-        # Check that the model has learned the XOR function
-        self.assertFalse(np.allclose(y_pred, self.y))
+            # Test on training data
+            y_pred = model.predict(self.X)
+
+            # Check that the model has learned the XOR function
+            self.assertFalse(np.allclose(y_pred, self.y))
 
    
