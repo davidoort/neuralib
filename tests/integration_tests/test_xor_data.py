@@ -33,6 +33,7 @@ class XorDataTest(TestCase):
     
         self.mlp_model = MLP(input_size=self.input_dim, hidden_size=self.hidden_dim, output_size=self.target_dim, activations=[Sigmoid(), Identity()], loss=MSE())
 
+        # TODO: add more variations to this list (e.g. iterate over different activations, loss functions, etc.)
         self.models = [self.manual_model, self.mlp_model]
     def test_prediction_on_init_weights(self):
         for model in self.models:

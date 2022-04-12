@@ -15,6 +15,7 @@ Neuralib is designed to provide a suite of submodules that can be used separatel
     - **Mean-Squared Error (MSE)**
 - `neuralib.layers.activations`
     - **Sigmoid**
+    - **ReLU**
 - `neuralib.layers.layers`:
     - **Linear** (or Fully-Connected Layer)
 
