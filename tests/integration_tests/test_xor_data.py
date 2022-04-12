@@ -29,11 +29,11 @@ class XorDataTest(TestCase):
         # self.X, self.y = xor_data(num_examples=self.batch_dim)
 
         # in one line
-        self.model = Model([Linear(input_size=self.input_dim, output_size=self.hidden_dim), Sigmoid(), Linear(input_size=self.hidden_dim, output_size=self.target_dim), MSE()])
+        self.manual_model = Model([Linear(input_size=self.input_dim, output_size=self.hidden_dim), Sigmoid(), Linear(input_size=self.hidden_dim, output_size=self.target_dim), MSE()])
     
         self.mlp_model = MLP(input_size=self.input_dim, hidden_size=self.hidden_dim, output_size=self.target_dim, activations=[Sigmoid(), Identity()], loss=MSE())
 
-        self.models = [self.model, self.mlp_model]
+        self.models = [self.manual_model, self.mlp_model]
     def test_prediction_on_init_weights(self):
         for model in self.models:
             y_pred = model.predict(self.X)
