@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from neuralib import Model
+from neuralib import SequentialModel
 from neuralib.layers import Linear, Sigmoid, MSE
 from neuralib.optimizers import VGD
 
@@ -48,7 +48,7 @@ if __name__ == '__main__':
     hidden_dim = 4   # number of neurons in the hidden layer
     target_dim = 1    # label dimensionality 
 
-    model = Model([Linear(input_size=input_dim, output_size=hidden_dim), 
+    model = SequentialModel([Linear(input_size=input_dim, output_size=hidden_dim), 
                    Sigmoid(), 
                    Linear(input_size=hidden_dim, output_size=target_dim), 
                    MSE()])

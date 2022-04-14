@@ -66,7 +66,7 @@ if __name__ == '__main__':
               activations=[ReLU(), Identity()], 
               metrics = [AngularError()])
     
-    # Add a visualize option for training, maybe it can be directly passed to the constructor of the metrics above
+    # TODO: Add a visualize option for training, maybe it can be directly passed to the constructor of the metrics above. This would call the visualize() method in the training loop
     mlp.train(train_x_flat, train_y, epochs=epochs, batch_size=batch_size, optimizer=VGD(lr=learning_rate), X_test=test_x_flat, y_test=test_y)
 
     metric = mlp.metrics[0]
@@ -75,4 +75,5 @@ if __name__ == '__main__':
         print('Cosine Similarity Error Test [deg]: ', metric.metric_history_test[-1][1])
 
     # Plot metrics
-    metric.plot_progress()
+    metric.plot_progress('train')
+    metric.plot_progress('test')

@@ -13,13 +13,13 @@ class ScalarMetric(ABC):
         assert(every_n_epochs > 0 and isinstance(every_n_epochs, int))
         self.every_n_epochs = every_n_epochs
 
-    def log(self, epoch: int, value, history: str = 'train') -> None:
-        if history == 'train':
+    def log(self, epoch: int, value, dataset: str = 'train') -> None:
+        if dataset == 'train':
             self.metric_history_train.append((epoch, value))
-        elif history == 'test':
+        elif dataset == 'test':
             self.metric_history_test.append((epoch, value))
         else:
-            raise ValueError('history must be either train or test')
+            raise ValueError('dataset must be either train or test')
 
     # def calculate_from_model(self, model, X: np.array, y: np.array) -> float:
     #     return self.calculate_from_predictions(model.predict(X), y)
@@ -31,25 +31,26 @@ class ScalarMetric(ABC):
     # def log_from_model(self, model, X: np.array, y: np.array, epoch: int) -> None:
     #     self.log(epoch, self.calculate_from_model(model, X, y))
 
-    def log_from_predictions(self, y_pred: np.array, y: np.array, epoch: int, history: str = 'train') -> None:
-        self.log(epoch, self.calculate_from_predictions(y_pred, y), history)
+    def log_from_predictions(self, y_pred: np.array, y: np.array, epoch: int, dataset: str = 'train') -> None:
+        self.log(epoch, self.calculate_from_predictions(y_pred, y), dataset)
 
     def visualize(self):
         raise NotImplementedError()
 
-    def plot_progress(self, history: str = 'train') -> None:
+    # TODO: Store history in a dictionary that is indexed by dataset and when dataset is not passed, plot all datasets
+    def plot_progress(self, dataset: str = 'train') -> None:
         # Plot training error progression over time
-        if history == 'train':
+        if dataset == 'train':
             history = self.metric_history_train
-        elif history == 'test':
+        elif dataset == 'test':
             history = self.metric_history_test
         else:
-            raise ValueError('history must be either train or test')
+            raise ValueError('dataset must be either train or test or not specified (both)')
 
         training_errors = np.asarray(history) 
         epochs = training_errors[:, 0]
         metric = training_errors[:, 1]
         plt.plot(epochs, metric)
         plt.xlabel('Epoch')
-        plt.ylabel(self.__class__.__name__)
+        plt.ylabel(self.__class__.__name__ + ' on ' + dataset)
         plt.show()

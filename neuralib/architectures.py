@@ -90,7 +90,7 @@ class Architecture(ABC):
         pass
 
 
-class Model(Architecture):
+class SequentialModel(Architecture):
     '''
     General model architecture, can be customized by adding sequential layers
     '''
@@ -183,7 +183,7 @@ class Model(Architecture):
             if self.metrics is not None and len(self.metrics) > 0:
                 for metric in self.metrics:
                     if i % metric.every_n_epochs == 0:
-                        metric.log_from_predictions(prediction, yi, i)
+                        metric.log_from_predictions(prediction, yi, i, dataset='train')
 
             if X_test is not None and y_test is not None:
                 # Calculate the test loss
@@ -193,7 +193,7 @@ class Model(Architecture):
                 if self.metrics is not None and len(self.metrics) > 0:
                     for metric in self.metrics:
                         if i % metric.every_n_epochs == 0:
-                            metric.log_from_predictions(test_prediction, y_test, i)
+                            metric.log_from_predictions(test_prediction, y_test, i, dataset='test')
 
     
     def _forward(self, inputs: np.array, targets: np.array = None) -> Union[np.array, np.array]:
@@ -260,7 +260,7 @@ class Model(Architecture):
         plt.ylabel('Test Error')
         plt.show()
 
-class MLP(Model):
+class MLP(SequentialModel):
     """
     Multi-layer perceptron model.
     """

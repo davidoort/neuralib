@@ -5,7 +5,7 @@ import pytest
 
 import numpy as np
 
-from neuralib import Model
+from neuralib import SequentialModel
 from neuralib.architectures import MLP
 from neuralib.layers import Linear
 from neuralib.layers.activations import Sigmoid
@@ -29,7 +29,7 @@ class XorDataTest(TestCase):
         # self.X, self.y = xor_data(num_examples=self.batch_dim)
 
         # in one line
-        self.manual_model = Model([Linear(input_size=self.input_dim, output_size=self.hidden_dim), Sigmoid(), Linear(input_size=self.hidden_dim, output_size=self.target_dim), MSE()])
+        self.manual_model = SequentialModel([Linear(input_size=self.input_dim, output_size=self.hidden_dim), Sigmoid(), Linear(input_size=self.hidden_dim, output_size=self.target_dim), MSE()])
     
         self.mlp_model = MLP(input_size=self.input_dim, hidden_size=self.hidden_dim, output_size=self.target_dim, activations=[Sigmoid(), Identity()], loss=MSE())
 

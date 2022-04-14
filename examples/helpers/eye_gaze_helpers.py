@@ -52,32 +52,3 @@ class AngularError(ScalarMetric):
         similarity = np.divide(ab, np.multiply(a_norm, b_norm))
 
         return np.arccos(similarity) * (180.0 / np.pi)
-
-
-
-
-
-# def predict_and_calculate_mean_error(model: Model, x, y):
-#     """Calculate mean error of neural network predictions on given data."""
-#     n, _, _ = x.shape
-#     predictions = model.predict(x.reshape(n, -1)).reshape(-1, 2)
-#     labels = y.reshape(-1, 2)
-#     errors = _angular_error(predictions, labels)
-#     return np.mean(errors)
-
-
-# def predict_and_visualize(model: Model, x, y):
-#     """Visualize errors of neural network on given data."""
-#     nr, nc = 1, 12
-#     n = nr * nc
-#     fig = plt.figure(figsize=(12, 2.))
-#     predictions = model.predict(x[:n, :].reshape(n, -1))
-#     for i, (image, label, prediction) in enumerate(zip(x[:n], y[:n], predictions)):
-#         plt.subplot(nr, nc, i + 1)
-#         plt.imshow(image, cmap='gray')
-#         error = _angular_error(prediction.reshape(1, 2), label.reshape(1, 2))
-#         plt.title('%.1f' % error, color='g' if error < 7.0 else 'r')
-#         plt.gca().get_xaxis().set_visible(False)
-#         plt.gca().get_yaxis().set_visible(False)
-#     plt.tight_layout(pad=0.0)
-#     plt.show()

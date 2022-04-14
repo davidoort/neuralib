@@ -2,7 +2,7 @@ from unittest import TestCase
 
 import numpy as np
 
-from neuralib import Model
+from neuralib import SequentialModel
 from neuralib.architectures import MLP
 from neuralib.layers import Linear
 from neuralib.layers.activations import Sigmoid
@@ -18,7 +18,7 @@ class MLPTest(TestCase):
         self.target_size = 1   # label dimensionality 
 
         # manually create shallow architecture
-        self.manual_model = Model([Linear(input_size=self.input_size, output_size=self.hidden_size), 
+        self.manual_model = SequentialModel([Linear(input_size=self.input_size, output_size=self.hidden_size), 
                                    Sigmoid(), 
                                    Linear(input_size=self.hidden_size, output_size=self.target_size), 
                                    MSE()])
