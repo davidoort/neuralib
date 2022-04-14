@@ -1,0 +1,7 @@
+name: neuralib_examples
+dependencies:
+  - h5py
+  - pip
+  - pip:
+    - -r examples_req.txt
+  

@@ -62,6 +62,7 @@ class MSE(Loss):
         residual = y_pred - y_true
         try:
             error = np.sum(residual**2)/(2*y_pred.shape[0])
+            # error = 0.5*np.mean(np.square(residual))
         except OverflowError as err:
             # Set error to infinity 
             print('Overflowed after ', error, err)

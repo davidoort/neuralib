@@ -1,4 +1,5 @@
 name: neuralib
 dependencies:
-  - numpy
-  - matplotlib
+  - pip
+  - pip:
+    - -r file:requirements.txt

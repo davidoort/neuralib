@@ -11,8 +11,13 @@ __pycache__/
 # C extensions
 *.so
 
-### VisualStudioCode ###
+# VSCode
 .vscode/     
+
+# Data
+data/*
+*.h5
+*.hdf5
 
 
 # Distribution / packaging
