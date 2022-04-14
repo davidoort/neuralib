@@ -89,7 +89,6 @@ class Architecture(ABC):
         """
         pass
 
-
 class SequentialModel(Architecture):
     '''
     General model architecture, can be customized by adding sequential layers
@@ -104,6 +103,9 @@ class SequentialModel(Architecture):
         self.test_loss = []
         self.layers = layers
         self.metrics = metrics
+
+        if len(self.layers) != 0:
+            self.validate()
 
         if len(self.layers) != 0:
             self.validate()
@@ -304,5 +306,3 @@ class MLP(SequentialModel):
 
         super().__init__(layers, metrics=metrics, random_seed=random_seed)
         
-
-   
