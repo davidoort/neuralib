@@ -1,12 +1,6 @@
 import numpy as np
 from numpy.random import randn
 
-def initialize_weights_uniform(input_size, output_size):
-    return np.random.uniform(size=(input_size, output_size))
-
-def initialize_weights_clip_normal(input_size, output_size):
-    return np.clip(np.random.normal(input_size, output_size), -0.1, 0.1)
-
 def xor_data(num_examples, noise=None):
     X = randn(num_examples, 2)
 

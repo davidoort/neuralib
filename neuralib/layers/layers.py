@@ -1,6 +1,5 @@
 import typing
 import numpy as np
-from neuralib.utils import initialize_weights_uniform
 from abc import ABC,abstractmethod
 from neuralib.optimizers import Optimizer
 
@@ -57,12 +56,20 @@ class ComputationalLayer(ABC):
 
 
 class GradLayer(ComputationalLayer):
-    def __init__(self, input_size: int, output_size: int) -> None:
+    def __init__(self, input_size: int, output_size: int, random_seed: int = None) -> None:
         super().__init__(input_size, output_size)
-        self.weights = initialize_weights_uniform(input_size, output_size) # n_inputs x n_outputs
-        self.biases = initialize_weights_uniform(1, output_size) # 1 x n_outputs
+        if random_seed is not None:
+            np.random.seed(random_seed)
+        self.weights = self.initialize_weights_clip_normal(input_size, output_size) # n_inputs x n_outputs
+        self.biases = self.initialize_weights_clip_normal(1, output_size) # 1 x n_outputs
         self.d_weights = np.zeros(self.weights.shape) # n_inputs x n_outputs = weights.shape
         self.d_biases = np.zeros(self.biases.shape) # 1 x n_outputs = biases.shape
+
+    def initialize_weights_uniform(self, input_size, output_size):
+        return np.random.uniform(size=(input_size, output_size))
+
+    def initialize_weights_clip_normal(self, input_size, output_size):
+        return np.clip(np.random.normal(size=(input_size, output_size)), -0.1, 0.1)
 
     def update(self, optimizer: Optimizer) -> None:
         """
@@ -149,7 +156,7 @@ class Linear(GradLayer):
         super().backward(gradients_top)
 
         self.d_weights = self._input_cache.T @ gradients_top  # Shape of d_weights is the same as the shape of weights so n_inputs x n_outputs 
-        self.d_biases = np.ones(shape=[1, gradients_top.shape[0]]) @ gradients_top # Shape of biases is 1 x n_outputs
+        self.d_biases = np.ones(shape=[1, gradients_top.shape[0]]) @ gradients_top # Shape of d_biases is the same as the shape of biases so 1 x n_outputs
         return gradients_top @ self.weights.T # Shape of gradients_prop is n_samples x n_inputs
 
     def __eq__(self, other) -> bool:
