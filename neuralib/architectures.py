@@ -213,7 +213,8 @@ class MLP(Model):
     Multi-layer perceptron model.
     """
     def __init__(self, input_size: int, output_size: int, hidden_size: List[int] = None, activations: List[ComputationalLayer] = [Sigmoid()], loss: Loss = MSE()) -> None:
-        """Create an array of layers based on high-level inputs and pass it down to the base class Model.
+        """
+        Create an array of layers based on high-level inputs and pass it down to the base class Model.
 
         Args:
             input_size (int): The dimension of the MLP input.
@@ -225,14 +226,17 @@ class MLP(Model):
         # Wrap in a list if hidden_size is not a list
         if not isinstance(hidden_size, list):
             hidden_size = [hidden_size]
+        #...same for activations
+        if not isinstance(activations, list):
+            activations = [activations]
 
         n_hidden = len(hidden_size) if hidden_size is not None else 0
-    
         assert(len(activations) == n_hidden+1 or len(activations) == 1)
 
         in_layer = Linear(input_size, hidden_size[0])
         out_layer = Linear(hidden_size[-1], output_size)
         layers = [in_layer, activations[0]]
+
         # If n_hidden = 1 this will be skipped because the hidden layer is implicitly created between the input and output layers
         for i in range(n_hidden-1):
             layers.append(Linear(hidden_size[i], hidden_size[i+1]))
