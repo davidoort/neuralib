@@ -196,6 +196,7 @@ class SequentialModel(Architecture):
                     for metric in self.metrics:
                         if i % metric.every_n_epochs == 0:
                             metric.log_from_predictions(test_prediction, y_test, i, dataset='test')
+                            metric.visualize(X_test, y_test, test_prediction)
 
     
     def _forward(self, inputs: np.array, targets: np.array = None) -> Union[np.array, np.array]:

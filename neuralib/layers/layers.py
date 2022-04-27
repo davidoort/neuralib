@@ -61,7 +61,7 @@ class GradLayer(ComputationalLayer):
         if random_seed is not None:
             np.random.seed(random_seed)
         self.weights = self.initialize_weights_clip_normal(input_size, output_size) # n_inputs x n_outputs
-        self.biases = self.initialize_weights_clip_normal(1, output_size) # 1 x n_outputs
+        self.biases = self.initialize_weights_constant(1, output_size, 1e-5) # 1 x n_outputs
         self.d_weights = np.zeros(self.weights.shape) # n_inputs x n_outputs = weights.shape
         self.d_biases = np.zeros(self.biases.shape) # 1 x n_outputs = biases.shape
 
@@ -70,6 +70,9 @@ class GradLayer(ComputationalLayer):
 
     def initialize_weights_clip_normal(self, input_size, output_size):
         return np.clip(np.random.normal(size=(input_size, output_size)), -0.1, 0.1)
+
+    def initialize_weights_constant(self, input_size, output_size, value):
+        return np.full((input_size, output_size), value)
 
     def update(self, optimizer: Optimizer) -> None:
         """
@@ -121,6 +124,8 @@ class Identity(ComputationalLayer):
             else:
                 return False
         return False
+
+# TODO: Add support for multi-channel inputs (e.g. RGB images)
 class Linear(GradLayer):
     def __init__(self, input_size: int, output_size: int) -> None:
         super().__init__(input_size, output_size)
@@ -135,6 +140,10 @@ class Linear(GradLayer):
         Returns:
             (n_samples x n_outputs): Layer outputs.
         """
+        # Flatten the inputs to a 2D array if it's a 3D array (in the case of a batch of images). Using Convention: (B, H, W, C)
+        if len(inputs.shape) == 3:
+            inputs = inputs.reshape(inputs.shape[0], -1)
+
         super().forward(inputs)
         return inputs @ self.weights + self.biases
 

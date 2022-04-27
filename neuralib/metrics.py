@@ -34,7 +34,7 @@ class ScalarMetric(ABC):
     def log_from_predictions(self, y_pred: np.array, y: np.array, epoch: int, dataset: str = 'train') -> None:
         self.log(epoch, self.calculate_from_predictions(y_pred, y), dataset)
 
-    def visualize(self):
+    def img_visualize(self):
         raise NotImplementedError()
 
     # TODO: Store history in a dictionary that is indexed by dataset and when dataset is not passed, plot all datasets
