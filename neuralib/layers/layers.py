@@ -1,6 +1,5 @@
 import typing
 import numpy as np
-from neuralib.utils import initialize_weights
 from abc import ABC,abstractmethod
 from neuralib.optimizers import Optimizer
 
@@ -57,12 +56,23 @@ class ComputationalLayer(ABC):
 
 
 class GradLayer(ComputationalLayer):
-    def __init__(self, input_size: int, output_size: int) -> None:
+    def __init__(self, input_size: int, output_size: int, random_seed: int = None) -> None:
         super().__init__(input_size, output_size)
-        self.weights = initialize_weights(input_size, output_size) # n_inputs x n_outputs
-        self.biases = initialize_weights(1, output_size) # 1 x n_outputs
+        if random_seed is not None:
+            np.random.seed(random_seed)
+        self.weights = self.initialize_weights_clip_normal(input_size, output_size) # n_inputs x n_outputs
+        self.biases = self.initialize_weights_constant(1, output_size, 1e-5) # 1 x n_outputs
         self.d_weights = np.zeros(self.weights.shape) # n_inputs x n_outputs = weights.shape
         self.d_biases = np.zeros(self.biases.shape) # 1 x n_outputs = biases.shape
+
+    def initialize_weights_uniform(self, input_size, output_size):
+        return np.random.uniform(size=(input_size, output_size))
+
+    def initialize_weights_clip_normal(self, input_size, output_size):
+        return np.clip(np.random.normal(size=(input_size, output_size)), -0.1, 0.1)
+
+    def initialize_weights_constant(self, input_size, output_size, value):
+        return np.full((input_size, output_size), value)
 
     def update(self, optimizer: Optimizer) -> None:
         """
@@ -114,6 +124,8 @@ class Identity(ComputationalLayer):
             else:
                 return False
         return False
+
+# TODO: Add support for multi-channel inputs (e.g. RGB images)
 class Linear(GradLayer):
     def __init__(self, input_size: int, output_size: int) -> None:
         super().__init__(input_size, output_size)
@@ -128,6 +140,10 @@ class Linear(GradLayer):
         Returns:
             (n_samples x n_outputs): Layer outputs.
         """
+        # Flatten the inputs to a 2D array if it's a 3D array (in the case of a batch of images). Using Convention: (B, H, W, C)
+        if len(inputs.shape) == 3:
+            inputs = inputs.reshape(inputs.shape[0], -1)
+
         super().forward(inputs)
         return inputs @ self.weights + self.biases
 
@@ -149,7 +165,7 @@ class Linear(GradLayer):
         super().backward(gradients_top)
 
         self.d_weights = self._input_cache.T @ gradients_top  # Shape of d_weights is the same as the shape of weights so n_inputs x n_outputs 
-        self.d_biases = np.ones(shape=[1, gradients_top.shape[0]]) @ gradients_top # Shape of biases is 1 x n_outputs
+        self.d_biases = np.ones(shape=[1, gradients_top.shape[0]]) @ gradients_top # Shape of d_biases is the same as the shape of biases so 1 x n_outputs
         return gradients_top @ self.weights.T # Shape of gradients_prop is n_samples x n_inputs
 
     def __eq__(self, other) -> bool:

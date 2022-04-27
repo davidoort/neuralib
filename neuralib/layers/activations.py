@@ -1,6 +1,8 @@
 import numpy as np
 from neuralib.layers.layers import ComputationalLayer
 
+# See https://cs231n.github.io/neural-networks-1/ for a concise introduction to various activation functions and their pros and cons.
+
 class Sigmoid(ComputationalLayer):
     def __init__(self):
         super().__init__()
@@ -15,7 +17,6 @@ class Sigmoid(ComputationalLayer):
     def backward(self, grad_top = None):
         """
         Computes the derivative of sigmoid funtion. sigmoid(y) * (1.0 - sigmoid(y)). 
-        The way we implemented this requires that the input y is already sigmoided
         """
         if grad_top is None:
             return self._d_sigmoid(self._input_cache)
@@ -87,6 +88,8 @@ class ReLU(ComputationalLayer):
         Returns:
             np.array: output matrix/vector of the same size as the input
         """
+        # TODO: compare performance of equivalent expressions
+        # return x * (x > 0)
         return np.maximum(0, x)
 
     def _d_relu(self, x: np.array) -> np.array:
@@ -100,7 +103,8 @@ class ReLU(ComputationalLayer):
         """
 
         # The derivative is 0 when the input is < 0, and 1 otherwise
-        d_relu_x = self._relu(np.sign(x)) 
+        d_relu_x = (x > 0).astype(np.float32)
+        # d_relu_x = self._relu(np.sign(x)) 
 
         # Assert that no element in d_relu_x is < 0 or > 1
         assert np.all(d_relu_x >= 0) and np.all(d_relu_x <= 1), "d_relu_x must be between 0 and 1"

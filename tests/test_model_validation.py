@@ -3,14 +3,14 @@ from unittest import TestCase
 
 import numpy as np
 
-from neuralib.architectures import Model
+from neuralib.architectures import SequentialModel
 from neuralib.layers import MSE, Sigmoid, Linear
 
 from numpy.testing import assert_equal
 
 class ValidationTest(TestCase):
 
-    model = Model()
+    model = SequentialModel()
 
     def test_loss_validation(self):
         self.model.add(MSE())

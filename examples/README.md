@@ -1,0 +1,10 @@
+## Eye-gaze estimation
+Eye-gaze information has many applications in Human-Computer Interaction such as improving user experience in everyday tasks, such as [reading](http://gbuscher.com/publications/BuscherBiedert10_readingRegions.pdf), or facilitate [gaze-based interaction](https://perceptual.mpi-inf.mpg.de/files/2014/07/majaranta14_apc.pdf). Eye-gaze also plays a crucial role in assisting users with motor-disabilities and can even be used to infer cognitive state such as cognitive load. Recently, deep-learning based gaze estimation was used for [unsupervised eye contact detection](https://perceptual.mpi-inf.mpg.de/files/2017/05/zhang17_uist.pdf) in everyday scenarios.
+
+The eye gaze data used is based on [UnityEyes](https://www.cl.cam.ac.uk/research/rainbow/projects/unityeyes/), a synthetic eyes dataset. Note that this is a clean and simple dataset as far as eye gaze estimation goes. The real-world task (real images, uncontrolled environmental conditions) is much more challenging and comprehensively solving this is an active area of research that would go beyond the scope of this notebook. The dataset consists of grayscale images (20x30) and pitch and yaw angles in radians as labels. 
+
+Since pitch and yaw angles are difficult to interpret, a more intuitive *angular* error metric based on [cosine similarity](https://en.wikipedia.org/wiki/Cosine_similarity#Angular_distance_and_similarity) has been defined. Angular distance in this case, is a single scalar value which would describe how many degrees the eyeball would need to turn to face match the estimated gaze direction.
+
+Helper functions to compute these metrics and a method to visualize our results are contained in `helpers/eye_gaze_helpers.py`.
+
+When you are ready, run `python eye_gaze_estimation.py`. This will download the data required automatically.
